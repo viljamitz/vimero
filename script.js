@@ -87,9 +87,9 @@ if (location.pathname.endsWith("index.html")) {
       posts.reverse();
 
       feedDiv.innerHTML = posts.map(post => `
-        <div class="post">
-          <strong>${post.name || "?"}</strong>
-          <p>${post.message}</p>
+      <div class="post">
+        <strong>${post.name || "?"}</strong>
+        <p>${post.message}</p>
         </div>
       `).join("");
     })
