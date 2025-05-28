@@ -28,74 +28,79 @@ function logout() {
   location.href = "login.html";
 }
 
-// Post submission logic for post.html
-if (location.pathname.endsWith("/") || location.pathname.endsWith("index.html")) {{
-  document.getElementById("postForm").addEventListener("submit", async e => {
-    e.preventDefault();
+// Handle feed loading and post submission
+if (location.pathname.endsWith("/") || location.pathname.endsWith("index.html")) {
+  const user = localStorage.getItem("vimeroUser");
 
-    const user = localStorage.getItem("vimeroUser");
-    const message = document.getElementById("message").value.trim();
+  // Load posts
+  function loadFeed() {
+    fetch(API_BASE_URL)
+      .then(response => response.json())
+      .then(data => {
+        const feedDiv = document.getElementById("feed");
+        const posts = data.posts;
 
-    if (!message) {
-      alert("Kirjoita viesti.");
-      return;
-    }
+        if (!posts || posts.length === 0) {
+          feedDiv.innerHTML = "<p>Ei viestejä vielä.</p>";
+          return;
+        }
 
-    try {
-      const response = await fetch(API_BASE_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          post: {
-            name: user,
-            message: message
-          }
-        })
+        posts.reverse(); // Show newest first
+
+        feedDiv.innerHTML = posts.map(post => `
+          <div class="post">
+            <strong>${post.name || "?"}</strong>
+            <p>${post.message}</p>
+          </div>
+        `).join("");
+      })
+      .catch(err => {
+        console.error("Virhe ladattaessa viestejä:", err);
+        document.getElementById("feed").innerText = "Virhe ladattaessa viestejä.";
       });
+  }
 
-      const result = await response.json();
-      if (response.ok) {
-        alert("Viesti lähetetty!");
-        location.href = "index.html";
-      } else {
-        console.error(result);
-        alert("Virhe Sheety-palvelussa.");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Verkkovirhe: " + err.message);
-    }
-  });
-}
+  loadFeed();
 
-// Load and show posts on index.html
-if (location.pathname.endsWith("index.html")) {
-  fetch(API_BASE_URL)
-    .then(response => response.json())
-    .then(data => {
-      const feedDiv = document.getElementById("feed");
-      const posts = data.posts;
+  // Handle post submission
+  const form = document.getElementById("postForm");
+  if (form) {
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const message = document.getElementById("message").value.trim();
 
-      if (posts.length === 0) {
-        feedDiv.innerHTML = "<p>Ei viestejä vielä.</p>";
+      if (!message) {
+        alert("Kirjoita viesti.");
         return;
       }
 
-      // Optional: reverse to show newest first
-      posts.reverse();
+      try {
+        const response = await fetch(API_BASE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            post: {
+              name: user,
+              message: message
+            }
+          })
+        });
 
-      feedDiv.innerHTML = posts.map(post => `
-      <div class="post">
-        <strong>${post.name || "?"}</strong>
-        <p>${post.message}</p>
-        </div>
-      `).join("");
-    })
-    .catch(err => {
-      console.error("Virhe ladattaessa viestejä:", err);
-      document.getElementById("feed").innerText = "Virhe ladattaessa viestejä.";
+        const result = await response.json();
+        if (response.ok) {
+          document.getElementById("message").value = ""; // clear textarea
+          loadFeed(); // refresh feed
+        } else {
+          console.error(result);
+          alert("Virhe Sheety-palvelussa.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Verkkovirhe: " + err.message);
+      }
     });
+  }
 }
 
