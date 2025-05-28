@@ -1,2 +1,0 @@
-# vimero
-Vimero Social App
