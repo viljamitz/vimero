@@ -13,22 +13,22 @@ if (location.pathname.endsWith("login.html")) {
     e.preventDefault();
     const name = document.getElementById("name").value.trim();
     const pass = document.getElementById("password").value;
-    if (pass === PASSWORD) {
+    if (pass === PASSWORD && name) {
       localStorage.setItem("vimeroUser", name);
       location.href = "index.html";
     } else {
-      alert("Väärä salasana.");
+      alert("Väärä salasana tai nimi puuttuu.");
     }
   });
 }
 
-// Logout
+// Logout function
 function logout() {
   localStorage.removeItem("vimeroUser");
   location.href = "login.html";
 }
 
-// Handle post form submission on post.html
+// Post submission logic
 if (location.pathname.endsWith("post.html")) {
   document.getElementById("postForm").addEventListener("submit", async e => {
     e.preventDefault();
@@ -42,6 +42,7 @@ if (location.pathname.endsWith("post.html")) {
     }
 
     try {
+      console.log("Posting to backend...", message);
       const response = await fetch(API_URL, {
         method: "POST",
         headers: {
@@ -54,6 +55,7 @@ if (location.pathname.endsWith("post.html")) {
       });
 
       const text = await response.text();
+      console.log("Response from server:", text);
       if (text === "OK") {
         alert("Viesti lähetetty!");
         location.href = "index.html";
