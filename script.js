@@ -29,7 +29,7 @@ function logout() {
 }
 
 // Post submission logic for post.html
-if (location.pathname.endsWith("post.html")) {
+if (location.pathname.endsWith("/") || location.pathname.endsWith("index.html")) {{
   document.getElementById("postForm").addEventListener("submit", async e => {
     e.preventDefault();
 
