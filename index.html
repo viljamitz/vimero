@@ -2,14 +2,47 @@
 <html lang="fi">
 <head>
   <meta charset="UTF-8">
-  <title>Vimero – Ville Mäkipellon somekanava</title>
+  <title>Vimero – Feed</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    .post {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .post strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.1em;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+    a {
+      margin: 0 8px;
+    }
+  </style>
 </head>
 <body>
   <h1>Vimero – Ville Mäkipellon somekanava</h1>
+
   <div id="feed">Ladataan viestejä...</div>
 
-  <p><a href="post.html">➕ Uusi viesti</a></p>
-  <p><a href="#" onclick="logout()">🚪 Kirjaudu ulos</a></p>
+  <div class="actions">
+    <a href="post.html">➕ Uusi viesti</a>
+    <a href="#" onclick="logout()">🚪 Kirjaudu ulos</a>
+  </div>
 
   <script src="script.js"></script>
 </body>
