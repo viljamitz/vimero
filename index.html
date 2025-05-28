@@ -13,6 +13,28 @@
     h1 {
       text-align: center;
     }
+    .post-form {
+      margin-bottom: 24px;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    textarea {
+      width: 100%;
+      min-height: 80px;
+      font-family: inherit;
+      font-size: 1em;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      resize: vertical;
+    }
+    button {
+      margin-top: 8px;
+      padding: 8px 12px;
+      font-size: 1em;
+    }
     .post {
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -37,13 +59,19 @@
 <body>
   <h1>Vimero – Ville Mäkipellon somekanava</h1>
 
+  <div class="post-form">
+    <form id="postForm">
+      <textarea id="message" placeholder="Kirjoita viesti..." required></textarea><br>
+      <button type="submit">📢 Lähetä viesti</button>
+    </form>
+  </div>
+
   <div id="feed">Ladataan viestejä...</div>
 
   <div class="actions">
-    <a href="post.html">➕ Uusi viesti</a>
     <a href="#" onclick="logout()">🚪 Kirjaudu ulos</a>
   </div>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
