@@ -28,7 +28,7 @@ function logout() {
   location.href = "login.html";
 }
 
-// Post submission logic
+// Post submission logic for post.html
 if (location.pathname.endsWith("post.html")) {
   document.getElementById("postForm").addEventListener("submit", async e => {
     e.preventDefault();
@@ -41,8 +41,6 @@ if (location.pathname.endsWith("post.html")) {
       return;
     }
 
-    const timestamp = new Date().toISOString();
-
     try {
       const response = await fetch(API_BASE_URL, {
         method: "POST",
@@ -52,8 +50,7 @@ if (location.pathname.endsWith("post.html")) {
         body: JSON.stringify({
           post: {
             name: user,
-            message: message,
-            timestamp: timestamp
+            message: message
           }
         })
       });
@@ -86,12 +83,12 @@ if (location.pathname.endsWith("index.html")) {
         return;
       }
 
-      // Show most recent posts first
+      // Optional: reverse to show newest first
       posts.reverse();
 
       feedDiv.innerHTML = posts.map(post => `
-        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
-          <strong>${post.name || "?"}</strong> <small>${new Date(post.timestamp).toLocaleString()}</small>
+        <div class="post">
+          <strong>${post.name || "?"}</strong>
           <p>${post.message}</p>
         </div>
       `).join("");
