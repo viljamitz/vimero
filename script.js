@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbzGGjaelM5k3YELu2x-Qcqq4tPK2_-NcYJC2IsEwZ2LjVW4vz220BALKyZ1w4WR9H1y4Q/exec";
+const API_BASE_URL = "https://api.sheety.co/008990575ec6f9fdba2d040d7c580763/vimeroData/posts";
 const PASSWORD = "makiseura2025";
 
 // Redirect to login if not logged in
@@ -41,30 +41,64 @@ if (location.pathname.endsWith("post.html")) {
       return;
     }
 
+    const timestamp = new Date().toISOString();
+
     try {
-      console.log("Posting to backend...", message);
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_BASE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          email: user,
-          message: message
+          post: {
+            name: user,
+            message: message,
+            timestamp: timestamp
+          }
         })
       });
 
-      const text = await response.text();
-      console.log("Response from server:", text);
-      if (text === "OK") {
+      const result = await response.json();
+      if (response.ok) {
         alert("Viesti lähetetty!");
         location.href = "index.html";
       } else {
-        alert("Virhe palvelimelta: " + text);
+        console.error(result);
+        alert("Virhe Sheety-palvelussa.");
       }
-    } catch (error) {
-      console.error("Virhe fetchissä:", error);
-      alert("Verkkovirhe: " + error.message);
+    } catch (err) {
+      console.error(err);
+      alert("Verkkovirhe: " + err.message);
     }
   });
 }
+
+// Load and show posts on index.html
+if (location.pathname.endsWith("index.html")) {
+  fetch(API_BASE_URL)
+    .then(response => response.json())
+    .then(data => {
+      const feedDiv = document.getElementById("feed");
+      const posts = data.posts;
+
+      if (posts.length === 0) {
+        feedDiv.innerHTML = "<p>Ei viestejä vielä.</p>";
+        return;
+      }
+
+      // Show most recent posts first
+      posts.reverse();
+
+      feedDiv.innerHTML = posts.map(post => `
+        <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+          <strong>${post.name || "?"}</strong> <small>${new Date(post.timestamp).toLocaleString()}</small>
+          <p>${post.message}</p>
+        </div>
+      `).join("");
+    })
+    .catch(err => {
+      console.error("Virhe ladattaessa viestejä:", err);
+      document.getElementById("feed").innerText = "Virhe ladattaessa viestejä.";
+    });
+}
+
