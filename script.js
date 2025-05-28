@@ -1,4 +1,4 @@
-const API_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_DEPLOYMENT_URL";
+const API_URL = "https://script.google.com/macros/s/AKfycbzGGjaelM5k3YELu2x-Qcqq4tPK2_-NcYJC2IsEwZ2LjVW4vz220BALKyZ1w4WR9H1y4Q/exec";
 const PASSWORD = "makiseura2025";
 
 // Redirect to login if not logged in
