@@ -27,3 +27,42 @@ function logout() {
   localStorage.removeItem("vimeroUser");
   location.href = "login.html";
 }
+
+// Handle post form submission on post.html
+if (location.pathname.endsWith("post.html")) {
+  document.getElementById("postForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const user = localStorage.getItem("vimeroUser");
+    const message = document.getElementById("message").value.trim();
+
+    if (!message) {
+      alert("Kirjoita viesti.");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: user,
+          message: message
+        })
+      });
+
+      const text = await response.text();
+      if (text === "OK") {
+        alert("Viesti lähetetty!");
+        location.href = "index.html";
+      } else {
+        alert("Virhe palvelimelta: " + text);
+      }
+    } catch (error) {
+      console.error("Virhe fetchissä:", error);
+      alert("Verkkovirhe: " + error.message);
+    }
+  });
+}
